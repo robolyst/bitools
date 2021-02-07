@@ -1,0 +1,56 @@
+  
+version: '3'
+
+
+volumes:
+  postgres:
+  redis:
+
+
+services:
+
+  redis:
+    image: redis
+    restart: always
+    volumes:
+      - redis:/data
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: superset
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  superset:
+    image: amancevice/superset:1.0.1
+    restart: always
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      MAPBOX_API_KEY: "pk.eyJ1IjoiZHJhZHJpYW4iLCJhIjoiY2sxbWxqeW4wMDBndzNvbnFmcmFibHprNSJ9.2UT9hkkN88Uoo105TKBYGQ"
+      DB_HOST: postgres
+      DB_USER: admin
+      DB_PASSWORD: admin
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./superset_config.py:/etc/superset/superset_config.py
+
+  worker:
+    image: amancevice/superset:1.0.1
+    restart: always
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      MAPBOX_API_KEY: "pk.eyJ1IjoiZHJhZHJpYW4iLCJhIjoiY2sxbWxqeW4wMDBndzNvbnFmcmFibHprNSJ9.2UT9hkkN88Uoo105TKBYGQ"
+      DB_HOST: postgres
+      DB_USER: admin
+      DB_PASSWORD: admin
+    volumes:
+      - ./superset_config.py:/etc/superset/superset_config.py
+    command: celery worker
