@@ -13,7 +13,6 @@ CACHE_CONFIG = {
     "CACHE_REDIS_URL": "redis://redis:6379/1",
 }
 # SQLALCHEMY_TRACK_MODIFICATIONS = True
-# SECRET_KEY = "thisISaSECRET_1234"
 
 
 # Database config
