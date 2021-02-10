@@ -1,0 +1,21 @@
+version: "3.4"
+
+
+volumes:
+  pgadmin-data:
+
+
+services:
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAUL_USERNAME=admin
+      - PGADMIN_DEFAULT_PASSWORD=admin
+      - PGADMIN_LISTEN_PORT=5431
+    ports:
+      - "5431:5431"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
